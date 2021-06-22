@@ -26,15 +26,26 @@ extern struct Logger _consoleLogger;
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
-#define LOGGER_PRINTF_OK  "\1"
-#define LOGGER_PRINTF_WRN "\2"
-#define LOGGER_PRINTF_ERR "\3"
+#define LOGGER_END_COLOR "\e[0m"
 
-#ifdef LOGGER_COLOR
-    #define LOGGER_F "\4" __FILE__ " [#" STR(__LINE__) "] \e[0m"
-#else
-    #define LOGGER_F __FILE__ " [#" STR(__LINE__) "] "
-#endif
+#define LOGGER_START_RED "\e[1;31m"
+#define LOGGER_END_RED LOGGER_END_COLOR
+#define LOGGER_RED(x) LOGGER_START_RED x LOGGER_END_RED
+
+#define LOGGER_START_GREEN "\e[1;32m"
+#define LOGGER_END_GREEN LOGGER_END_COLOR
+#define LOGGER_GREEN(x) LOGGER_START_GREEN x LOGGER_END_GREEN
+
+#define LOGGER_START_YELLOW "\e[1;33m"
+#define LOGGER_END_YELLOW LOGGER_END_COLOR
+#define LOGGER_YELLOW(x) LOGGER_START_YELLOW x LOGGER_END_YELLOW
+
+
+#define LOGGER_PRINTF_OK  LOGGER_GREEN("OK ")
+#define LOGGER_PRINTF_WRN LOGGER_YELLOW("WARRNING ")
+#define LOGGER_PRINTF_ERR LOGGER_RED("ERROR ")
+
+#define LOGGER_F __FILE__ " [#" STR(__LINE__) "]`:\n    "
 
 #define LOGGER_FULL_OK  LOGGER_PRINTF_OK  LOGGER_F
 #define LOGGER_FULL_WRN LOGGER_PRINTF_WRN LOGGER_F
