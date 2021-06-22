@@ -51,4 +51,32 @@ extern struct Logger _consoleLogger;
 #define LOGGER_FULL_WRN LOGGER_PRINTF_WRN LOGGER_F
 #define LOGGER_FULL_ERR LOGGER_PRINTF_ERR LOGGER_F
 
+
+#ifndef LOGGER_COLOR
+
+    #undef LOGGER_END_COLOR
+    #undef LOGGER_START_RED
+    #undef LOGGER_END_RED
+    #undef LOGGER_RED
+    #undef LOGGER_START_GREEN
+    #undef LOGGER_END_GREEN
+    #undef LOGGER_GREEN
+    #undef LOGGER_START_YELLOW
+    #undef LOGGER_END_YELLOW
+    #undef LOGGER_YELLOW
+
+    #define LOGGER_END_COLOR
+    #define LOGGER_START_RED
+    #define LOGGER_END_RED
+    #define LOGGER_RED(x) x
+    #define LOGGER_START_GREEN
+    #define LOGGER_END_GREEN
+    #define LOGGER_GREEN(x) x
+    #define LOGGER_START_YELLOW
+    #define LOGGER_END_YELLOW
+    #define LOGGER_YELLOW(x) x
+
+#endif
+
+
 #endif
