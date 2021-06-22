@@ -8,7 +8,7 @@ static void PrintTime() {
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     #ifdef LOGGER_COLOR
-        printf("\e[1;30m%02d:%02d:%02d \e[0m", tm.tm_hour, tm.tm_min, tm.tm_sec);
+        printf(LOGGER_GRAY("%02d:%02d:%02d "), tm.tm_hour, tm.tm_min, tm.tm_sec);
     #else
         printf("%02d:%02d:%02d ", tm.tm_hour, tm.tm_min, tm.tm_sec);
     #endif
@@ -20,7 +20,7 @@ static void PrintTime() {
 
 #if !defined(LOGGER_DISABLE)
 #include <stdio.h>
-void ConsolePut(const char * str) {
+static void ConsolePut(const char * str) {
     PrintTime();
     puts(str);
 }
@@ -28,7 +28,7 @@ void ConsolePut(const char * str) {
 
 #if !defined(LOGGER_DISABLE) && !defined(LOGGER_VA_ARGS_DISABLE)
 #include <stdarg.h>
-void ConsolePrintf(const char * format, ...) {
+static void ConsolePrintf(const char * format, ...) {
     va_list arglist;
     va_start(arglist, format);
     PrintTime();
