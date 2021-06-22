@@ -6,3 +6,6 @@
 
 // отключение журналирования
 // #define LOGGER_DISABLE
+
+// добавить время
+//#define LOGGER_TIME
