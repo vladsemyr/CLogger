@@ -60,7 +60,7 @@ void ConsolePrintf(const char * format, ...) {
 }
 #endif
 
-struct Logger consoleLogger = {
+struct Logger _consoleLogger = {
 #if !defined(LOGGER_DISABLE)
     .LPut = ConsolePut,
 #endif

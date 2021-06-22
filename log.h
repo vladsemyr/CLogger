@@ -19,7 +19,8 @@ struct Logger {
 #endif
 };
 
-extern struct Logger consoleLogger;
+extern struct Logger _consoleLogger;
+#define consoleLogger (void)_consoleLogger
 
 
 #define STR_HELPER(x) #x
