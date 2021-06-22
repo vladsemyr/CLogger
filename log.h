@@ -45,7 +45,7 @@ extern struct Logger _consoleLogger;
 #define LOGGER_PRINTF_WRN LOGGER_YELLOW("WARRNING ")
 #define LOGGER_PRINTF_ERR LOGGER_RED("ERROR ")
 
-#define LOGGER_F __FILE__ " [#" STR(__LINE__) "]`:\n    "
+#define LOGGER_F __FILE__ ":" STR(__LINE__) ":\n    "
 
 #define LOGGER_FULL_OK  LOGGER_PRINTF_OK  LOGGER_F
 #define LOGGER_FULL_WRN LOGGER_PRINTF_WRN LOGGER_F
