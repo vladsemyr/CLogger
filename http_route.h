@@ -7,7 +7,7 @@ typedef int (*HttpRouteFunction)();
 
 struct HttpRouteTableRow {
     enum HttpMethod method;
-    struct HttpString url;
+    String_t url;
     HttpRouteFunction function;
 };
 
@@ -21,14 +21,11 @@ struct HttpRouteTable {
 void HttpRouteRegisterUrl(
     struct HttpRouteTable *table,
     enum HttpMethod method,
-    struct HttpString *url,
+    String_t *url,
     HttpRouteFunction function);
 
 #define HttpRouteRegisterUrl2(ptr_table, method, url, function) {   \
-        struct HttpString _url = {                                  \
-            .ptr = url,                                             \
-            .len = sizeof(url)-1                                    \
-        };                                                          \
+        String_t _url = stringMethods.Create(url, sizeof(url)-1);   \
         HttpRouteRegisterUrl(                                       \
             ptr_table,                                              \
             method,                                                 \

@@ -5,12 +5,11 @@
 void HttpRouteRegisterUrl(
     struct HttpRouteTable *table,
     enum HttpMethod method,
-    struct HttpString *url,
+    String_t *url,
     HttpRouteFunction function
 ) {
     table->rows[table->row_registered_count].method = method;
-    table->rows[table->row_registered_count].url.ptr = url->ptr;
-    table->rows[table->row_registered_count].url.len = url->len;
+    table->rows[table->row_registered_count].url = stringMethods.SimpleClone(url);
     table->rows[table->row_registered_count].function = function;
     table->row_registered_count += 1;
 }
@@ -25,17 +24,8 @@ void HttpRoute(
         if (!is_method_equal)
             continue;
         
-        // TODO: отдельный файл с HttpString и его функциями
-        if (request->path.len != route_table->rows[i].url.len)
-            continue;
-        
-        bool is_url_equal = strncmp(
-            route_table->rows[i].url.ptr,
-            request->path.ptr,
-            route_table->rows[i].url.len
-        );
-        
-        if (is_url_equal != 0)
+        bool is_url_equal = stringMethods.Compare(&request->path, &route_table->rows[i].url);
+        if (!is_url_equal)
             continue;
         
         route_table->rows[i].function();

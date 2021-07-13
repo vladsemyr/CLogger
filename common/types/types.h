@@ -3,9 +3,10 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
-typedef size_t register_t;
-typedef uint8_t minimal_size_t;
+typedef size_t max_fast_t;
+typedef uint8_t min_fast_t;
 
 
 

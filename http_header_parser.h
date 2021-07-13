@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include "http_header_parser_cfg.h"
+#include "common/string/string.h"
 
 // GET / HTTP/1.1
 // Host: localhost:4030
@@ -42,20 +43,15 @@ struct HttpParamIterator{
 
 #endif
 
-struct HttpString {
-    char const *ptr;
-    size_t len;
-};
-
 struct HttpKeyValue {
-    struct HttpString key;
-    struct HttpString value;
+    String_t key;
+    String_t value;
 };
 
 
 struct HttpRequest {
     enum HttpMethod method;
-    struct HttpString path;
+    String_t path;
     enum HttpProtocol protocol;
     
     #ifdef HTTP_HEADER_REQUEST_DEFINED_ANY

@@ -152,7 +152,7 @@ static enum HttpMethod HttpHeaderGetMethod(const char *line_start, const char *l
     return method;
 }
 
-struct HttpString HttpHeaderGetPath(const char * end_method_ptr, const char * line_end, const char ** path_end) {
+static String_t HttpHeaderGetPath(const char * end_method_ptr, const char * line_end, const char ** path_end) {
     size_t path_protocol_len = line_end - end_method_ptr;
     const char *ps = StrTrim(end_method_ptr, &path_protocol_len);
     const char *pe = StrFindFirst(ps, path_protocol_len, ' ');
@@ -162,10 +162,7 @@ struct HttpString HttpHeaderGetPath(const char * end_method_ptr, const char * li
     
     const size_t path_len = pe - ps;
     *path_end = pe;
-    struct HttpString ret = {
-        .ptr = ps,
-        .len = path_len,
-    };
+    String_t ret = stringMethods.Create(ps, path_len);
     return ret;
 }
 
@@ -216,8 +213,8 @@ enum HttpParseHeaderError HttpHeaderParse(const char *buffer, struct HttpRequest
         return HTTP_PARSE_HEADER_ERROR_METHOD;
     
     const char * path_ptr_end = NULL;
-    struct HttpString path = HttpHeaderGetPath(method_ptr_end, line_end, &path_ptr_end);
-    if (path.ptr == NULL)
+    String_t path = HttpHeaderGetPath(method_ptr_end, line_end, &path_ptr_end);
+    if (path.array_base.pointer == NULL)
         return HTTP_PARSE_HEADER_ERROR_PATH;
     
     enum HttpProtocol protocol = HttpHeaderGetProtocol(path_ptr_end, line_end); // TODO: проверка на конец строки
@@ -268,14 +265,8 @@ enum HttpParamIteratorStatus HttpHeaderIteratorGetNext(struct HttpParamIterator 
     const char *value_ptr = StrTrim(dd + 1, &value_len);
     
     struct HttpKeyValue new_param = {
-        .key = {
-            .ptr = key_ptr,
-            .len = key_len
-        },
-        .value = {
-            .ptr = value_ptr,
-            .len = value_len
-        }
+        .key   = stringMethods.Create(key_ptr,  key_len),
+        .value = stringMethods.Create(value_ptr,value_len)
     };
     
     *param = new_param;

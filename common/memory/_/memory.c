@@ -3,8 +3,8 @@
 
 
 enum StaticCompute {
-    MINIMAL_SIZE = sizeof(minimal_size_t),      // TODO: ???
-    WORD_SIZE = sizeof(register_t),             // обычно 4 или 8 байт
+    MINIMAL_SIZE = sizeof(min_fast_t),      // TODO: ???
+    WORD_SIZE = sizeof(max_fast_t),             // обычно 4 или 8 байт
     WORD_SIZE_LOG2_1 = WORD_SIZE / 2,
     WORD_SIZE_LOG2_2 = WORD_SIZE_LOG2_1 / 2,
     WORD_SIZE_LOG2_3 = WORD_SIZE_LOG2_2 / 2,
@@ -28,12 +28,12 @@ enum StaticCompute {
 static_assert(WORD_SIZE_LOG2_SHIFT != 0, "Shift == 0!");
 static_assert((WORD_SIZE & (WORD_SIZE - 1)) == 0, "WORD_SIZE is not power of 2!");
 
-static bool FastCompare(void const * p1, void const * p2, register_t const len) {
-    register_t const         whole_parts_count  = len >> WORD_SIZE_LOG2_SHIFT; // делится может долго, поэтому сдвиги
-    register_t const         residue            = len - (whole_parts_count << WORD_SIZE_LOG2_SHIFT);
-    register_t const * const last_whole_part_a1 = ((register_t const * const) p1) + whole_parts_count;
-    register_t const *       pointer_whole_a1   = ((register_t const *) p1);
-    register_t const *       pointer_whole_a2   = ((register_t const *) p2);
+static bool FastCompare(void const * p1, void const * p2, max_fast_t const len) {
+    max_fast_t const         whole_parts_count  = len >> WORD_SIZE_LOG2_SHIFT; // делится может долго, поэтому сдвиги
+    max_fast_t const         residue            = len - (whole_parts_count << WORD_SIZE_LOG2_SHIFT);
+    max_fast_t const * const last_whole_part_a1 = ((max_fast_t const * const) p1) + whole_parts_count;
+    max_fast_t const *       pointer_whole_a1   = ((max_fast_t const *) p1);
+    max_fast_t const *       pointer_whole_a2   = ((max_fast_t const *) p2);
     
     while (pointer_whole_a1 != last_whole_part_a1) {
         if (*pointer_whole_a1 != *pointer_whole_a2)
@@ -42,9 +42,9 @@ static bool FastCompare(void const * p1, void const * p2, register_t const len) 
         pointer_whole_a2++;
     }
     
-    minimal_size_t const * const last_residue_part_a1 = ((minimal_size_t const * const) last_whole_part_a1) + residue;
-    minimal_size_t const *       pointer_residue_a1   = ((minimal_size_t const *) pointer_whole_a1);
-    minimal_size_t const *       pointer_residue_a2   = ((minimal_size_t const *) pointer_whole_a2);
+    min_fast_t const * const last_residue_part_a1 = ((min_fast_t const * const) last_whole_part_a1) + residue;
+    min_fast_t const *       pointer_residue_a1   = ((min_fast_t const *) pointer_whole_a1);
+    min_fast_t const *       pointer_residue_a2   = ((min_fast_t const *) pointer_whole_a2);
     
     while (pointer_residue_a1 != last_residue_part_a1) {
         if (*pointer_residue_a1 != *pointer_residue_a2)
@@ -56,7 +56,7 @@ static bool FastCompare(void const * p1, void const * p2, register_t const len) 
     return true;
 }
 
-static bool Compare(void const * p1, void const * p2, register_t const len) {
+static bool Compare(void const * p1, void const * p2, max_fast_t const len) {
     // TODO: побайтно
     return FastCompare(p1, p2 ,len);
 }

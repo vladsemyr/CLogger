@@ -14,10 +14,13 @@
 #include "http_header_parser.h"
 #include "http_route.h"
 
+
 char global_url_buffer[512];
-struct HttpString global_url = {
-    .ptr = global_url_buffer,
-    .len = 0
+String_t global_url = {
+    .array_base = {
+        .pointer = global_url_buffer,
+        .count = 0
+    }
 };
 
 
@@ -68,8 +71,8 @@ int ReadFromClient(int fd) {
         
         HttpRoute(&http_route_table, &request);
         
-        strncpy(global_url_buffer, request.path.ptr, request.path.len);
-        global_url.len = request.path.len;
+        strncpy(global_url_buffer, request.path.array_base.pointer, request.path.array_base.count);
+        global_url.array_base.count = request.path.array_base.count;
         
         return 0;
     }
@@ -77,34 +80,28 @@ int ReadFromClient(int fd) {
 
 
 int WriteToClient(int fd) {
-    int nbyte = write(fd, global_url.ptr, global_url.len);
+    int nbyte = write(fd, global_url.array_base.pointer, global_url.array_base.count);
     return nbyte > 0 ? 0 : -1;
 }
 
 #include "common/string/string.h"
 
 int main() {
-    struct String s1 = {
-        ._arraybase = {
-            ._array = {
-                .pointer = "NULL123456484654asfdfgjkmdf;kgj;sdflkgj;dslfgjldfgdf",
-                .count = sizeof("NULL123456484654asfdfgjkmdf;kgj;sdflkgj;dslfgjldfgdf") - 1
-            },
+    String_t s1 = {
+        .array_base = {
+            .pointer = "NULL123456484654asfdfgjkmdf;kgj;sdflkgj;dslfgjldfgdf",
+            .count = sizeof("NULL123456484654asfdfgjkmdf;kgj;sdflkgj;dslfgjldfgdf") - 1
         }
     };
-    struct String s2 = {
-        ._arraybase = {
-            ._array = {
-                .pointer = "123z",
-                .count = sizeof("123z") - 1
-            },
+    String_t s2 = {
+        .array_base = {
+            .pointer = "NULL123456484654asfdfgjkmdf;kgj;sdflkgj;dslfgjldfgdf",
+            .count = sizeof("NULL123456484654asfdfgjkmdf;kgj;sdflkgj;dslfgjldfgdf") - 1
         }
     };
     
-    char c = 'z';
-    consoleLogger.LPrintf(LOGGER_GREEN("%d"), stringMethods.FindSequence(&s1, &s2));
-    return 0;
-    
+    consoleLogger.LPrintf(LOGGER_GREEN("%d"), stringMethods.Compare(&s1, &s2));
+    //return 0;
     
     RegisterUrl();
     consoleLogger.LPrintf(LOGGER_GREEN("Compiled with GCC %s"), __VERSION__);
